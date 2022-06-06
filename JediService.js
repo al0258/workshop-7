@@ -7,10 +7,14 @@ async function replaceJedi(jediId, jedi) {
 
 async function deleteJedi(id) {
     //TODO Delete jedi by given id in our file
+    let data = await readJediFile();
+    const result = data.filter(jedi => Number.parseInt(jedi.id) !== Number.parseInt(id));
+    await writeJediFile(result);
 }
 
 async function getAll() {
-    //TODO obtain all saved jedis and return it to callee
+   let data = await readJediFile();
+   return data;
 }
 
 async function addJedi(jedi) {

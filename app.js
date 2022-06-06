@@ -33,6 +33,56 @@ app.get("/jedi/:id", async (req, res) => {
     res.status(200).json(jedi);
 });
 
+app.get("/jedi", async (req, res) => {
+    let data = await jediService.getAll();
+
+    if (!data) return res.status(404).json({
+        status: 404,
+        error: "Not found"
+    });
+
+    res.status(200).json(data);
+});
+
+app.put("/jedi/:id", async (req, res) => {
+    let jediId = Number.parseInt(req.params.id);
+    if (isNaN(jediId)) return res.status(400).json({
+        status: 400,
+        error: "wrong parameters"
+    });
+
+    const jedi = await jediService.getJedi(jediId);
+
+    if (!jedi) return res.status(404).json({
+        status: 404,
+        error: "Not found"
+    });
+
+    await jediService.deleteJedi(jediId);
+    await jediService.addJedi(req.body);
+    res.status(200).json(req.body);
+
+});
+
+app.delete("/jedi/:id", async (req, res) => {
+    let jediId = Number.parseInt(req.params.id);
+    if (isNaN(jediId)) return res.status(400).json({
+        status: 400,
+        error: "wrong parameters"
+    });
+
+    const jedi = await jediService.getJedi(jediId);
+
+    if (!jedi) return res.status(404).json({
+        status: 404,
+        error: "Not found"
+    });
+
+    await jediService.deleteJedi(jediId);
+    res.status(200).json(req.body);
+
+});
+
 //TODO 1. create GET /jedi route and handle logic inside of it
 
 //TODO 2. create PUT /jedi/:id route and handle logic of updating jedi that already exists in the list.
